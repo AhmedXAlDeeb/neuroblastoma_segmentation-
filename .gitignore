@@ -15,6 +15,7 @@ data/preprocessed/
 data/trained_models/
 data/nnUNet_preprocessed/
 data/nnUNet_raw/
+data/raw data as the source/
 
 # Environment
 .env
