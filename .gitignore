@@ -1,0 +1,36 @@
+﻿# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.so
+
+# nnUNet caches
+*.npy
+*.pkl
+*.npz
+*.log
+*.h5
+
+# nnUNet folders
+data/preprocessed/
+data/trained_models/
+data/nnUNet_preprocessed/
+data/nnUNet_raw/
+
+# Environment
+.env
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Notebooks
+.ipynb_checkpoints/
+
+# PyTorch artifacts
+*.pt
+*.pth
+*.ckpt
+
+# VS Code
+.vscode/

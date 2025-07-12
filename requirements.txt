@@ -1,0 +1,15 @@
+﻿# Core
+torch
+torchvision
+nibabel
+numpy
+scipy
+matplotlib
+tqdm
+pandas
+
+# Optional
+nnunet==2.2.0
+monai
+scikit-learn
+SimpleITK
