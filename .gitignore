@@ -16,6 +16,7 @@ data/trained_models/
 data/nnUNet_preprocessed/
 data/nnUNet_raw/
 data/raw data as the source/
+raw_data/
 
 # Environment
 .env
@@ -32,6 +33,8 @@ Thumbs.db
 *.pt
 *.pth
 *.ckpt
+*.nii
+*.nii.gz
 
 # VS Code
 .vscode/
