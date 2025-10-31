@@ -1,0 +1,59 @@
+import os
+import nibabel as nib
+import numpy as np
+import json
+
+def count_nonempty_slices(label_path, axis=2):
+    """
+    Count number of slices along given axis that contain any segmentation.
+    
+    Args:
+        label_path (str): Path to label NIfTI file.
+        axis (int): Axis along which to slice (0=axial, 1=coronal, 2=sagittal).
+    
+    Returns:
+        total_slices (int), nonempty_slices (int)
+    """
+    label_img = nib.load(label_path)
+    lab = (label_img.get_fdata() > 0).astype(np.uint8)
+
+    total_slices = lab.shape[axis]
+    nonempty_slices = 0
+
+    for i in range(total_slices):
+        if axis == 0:
+            slice_data = lab[i, :, :]
+        elif axis == 1:
+            slice_data = lab[:, i, :]
+        else:
+            slice_data = lab[:, :, i]
+
+        if slice_data.sum() > 0:
+            nonempty_slices += 1
+
+    return total_slices, nonempty_slices
+
+def batch_count_slices(label_dir, axis=2):
+    """
+    Run slice counting for all label files in a directory.
+    """
+    results = {}
+    label_files = [f for f in os.listdir(label_dir) if f.endswith('.nii.gz')]
+    for f in label_files:
+        path = os.path.join(label_dir, f)
+        total, nonempty = count_nonempty_slices(path, axis=axis)
+        results[f] = {
+            "total_slices": total,
+            "nonempty_slices": nonempty,
+            "fraction_nonempty": nonempty / total
+        }
+    return results
+
+
+if __name__ == "__main__":
+    for fold_num in range(4):  # Change 4 to your number of folds
+        label_dir = f"fold_{fold_num}/labels"
+        results = batch_count_slices(label_dir, axis=2)
+        with open(f"fold_{fold_num}/label_slice_counts.json", "w") as f:
+            json.dump(results, f, indent=4)
+        print(f"Saved slice counts to fold_{fold_num}/label_slice_counts.json")

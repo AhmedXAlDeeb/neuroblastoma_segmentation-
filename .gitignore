@@ -11,12 +11,8 @@ __pycache__/
 *.h5
 
 # nnUNet folders
-data/preprocessed/
-data/trained_models/
-data/nnUNet_preprocessed/
-data/nnUNet_raw/
-data/raw data as the source/
-raw_data/
+
+data/
 
 # Environment
 .env
@@ -38,3 +34,13 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+results_analysis/fold*
+
+results_analysis/all_folds
+results_analysis/results
+results_analysis/videos
+results_analysis/*.json
+
+
+configur*
