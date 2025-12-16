@@ -38,3 +38,16 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+
+data/
+results_analysis/*fold*
+results_analysis/videos
+
+results_analysis/*.json
+results_analysis/*.csv
+results_analysis/*.png
+results_analysis/*.svg
+
+nnUnet/
+

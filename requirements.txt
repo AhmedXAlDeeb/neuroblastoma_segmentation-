@@ -9,7 +9,7 @@ tqdm
 pandas
 
 # Optional
-nnunet==2.2.0
+# nnunet
 monai
 scikit-learn
 SimpleITK
