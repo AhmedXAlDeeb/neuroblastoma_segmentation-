@@ -1,0 +1,281 @@
+=== Processing labels folder ===
+[LABEL] case_001.nii.gz: shape=(512, 512, 281), nonzero_voxels=275040, slice_axis=2, segmented_slices=62
+[LABEL] case_002.nii.gz: shape=(512, 512, 305), nonzero_voxels=150571, slice_axis=2, segmented_slices=53
+[LABEL] case_003.nii.gz: shape=(512, 512, 625), nonzero_voxels=1779005, slice_axis=0, segmented_slices=230
+[LABEL] case_004.nii.gz: shape=(512, 512, 651), nonzero_voxels=241279, slice_axis=0, segmented_slices=97
+[LABEL] case_005.nii.gz: shape=(512, 512, 461), nonzero_voxels=545932, slice_axis=2, segmented_slices=137
+[LABEL] case_006.nii.gz: shape=(512, 512, 269), nonzero_voxels=266154, slice_axis=2, segmented_slices=83
+[LABEL] case_007.nii.gz: shape=(512, 512, 66), nonzero_voxels=59916, slice_axis=2, segmented_slices=23
+[LABEL] case_008.nii.gz: shape=(512, 512, 305), nonzero_voxels=104571, slice_axis=2, segmented_slices=43
+[LABEL] case_009.nii.gz: shape=(512, 512, 246), nonzero_voxels=74579, slice_axis=2, segmented_slices=94
+[LABEL] case_010.nii.gz: shape=(512, 512, 257), nonzero_voxels=153501, slice_axis=2, segmented_slices=42
+[LABEL] case_011.nii.gz: shape=(512, 512, 333), nonzero_voxels=17716, slice_axis=2, segmented_slices=41
+[LABEL] case_012.nii.gz: shape=(512, 512, 337), nonzero_voxels=38508, slice_axis=2, segmented_slices=43
+[LABEL] case_013.nii.gz: shape=(512, 512, 245), nonzero_voxels=47293, slice_axis=2, segmented_slices=48
+[LABEL] case_014.nii.gz: shape=(512, 512, 539), nonzero_voxels=182266, slice_axis=0, segmented_slices=100
+[LABEL] case_015.nii.gz: shape=(512, 512, 297), nonzero_voxels=323423, slice_axis=2, segmented_slices=57
+[LABEL] case_016.nii.gz: shape=(512, 512, 128), nonzero_voxels=40009, slice_axis=2, segmented_slices=17
+[LABEL] case_017.nii.gz: shape=(512, 512, 257), nonzero_voxels=147269, slice_axis=2, segmented_slices=57
+[LABEL] case_019.nii.gz: shape=(512, 512, 513), nonzero_voxels=512434, slice_axis=0, segmented_slices=192
+[LABEL] case_020.nii.gz: shape=(512, 512, 509), nonzero_voxels=3780645, slice_axis=2, segmented_slices=200
+[LABEL] case_021.nii.gz: shape=(512, 512, 541), nonzero_voxels=344374, slice_axis=0, segmented_slices=122
+[LABEL] case_022.nii.gz: shape=(512, 512, 633), nonzero_voxels=1633736, slice_axis=0, segmented_slices=251
+[LABEL] case_023.nii.gz: shape=(512, 512, 649), nonzero_voxels=105322, slice_axis=0, segmented_slices=133
+[LABEL] case_024.nii.gz: shape=(512, 512, 373), nonzero_voxels=540769, slice_axis=2, segmented_slices=56
+[LABEL] case_025.nii.gz: shape=(512, 512, 537), nonzero_voxels=60852, slice_axis=0, segmented_slices=66
+[LABEL] case_026.nii.gz: shape=(512, 512, 481), nonzero_voxels=4209745, slice_axis=2, segmented_slices=202
+[LABEL] case_027.nii.gz: shape=(512, 512, 513), nonzero_voxels=33938, slice_axis=0, segmented_slices=65
+[LABEL] case_028.nii.gz: shape=(512, 512, 577), nonzero_voxels=608805, slice_axis=0, segmented_slices=124
+[LABEL] case_029.nii.gz: shape=(512, 512, 413), nonzero_voxels=439366, slice_axis=2, segmented_slices=65
+[LABEL] case_032.nii.gz: shape=(512, 512, 505), nonzero_voxels=2323895, slice_axis=2, segmented_slices=97
+[LABEL] case_033.nii.gz: shape=(512, 512, 755), nonzero_voxels=68791, slice_axis=0, segmented_slices=76
+[LABEL] case_035.nii.gz: shape=(512, 512, 329), nonzero_voxels=1091640, slice_axis=2, segmented_slices=78
+[LABEL] case_036.nii.gz: shape=(512, 512, 281), nonzero_voxels=126119, slice_axis=2, segmented_slices=70
+
+[INFO] Total segmented slices from labels folder: 3024
+
+=== Processing 'others' folder ===
+
+[PROCESS] File: Segmentation case 59 2; abdomen pelvis version 2.nii
+ - mask shape: (512, 512, 246); nonzero_voxels: 290394; chosen slice axis: 2
+   resampled dice vs label case_001.nii.gz: 0.248720 (resampled (512, 512, 246) -> (512, 512, 281))
+   resampled dice vs label case_002.nii.gz: 0.065958 (resampled (512, 512, 246) -> (512, 512, 305))
+   resampled dice vs label case_003.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 625))
+   resampled dice vs label case_004.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 651))
+   resampled dice vs label case_005.nii.gz: 0.000673 (resampled (512, 512, 246) -> (512, 512, 461))
+   resampled dice vs label case_006.nii.gz: 0.004784 (resampled (512, 512, 246) -> (512, 512, 269))
+   resampled dice vs label case_007.nii.gz: 0.000503 (resampled (512, 512, 246) -> (512, 512, 66))
+   resampled dice vs label case_008.nii.gz: 0.020741 (resampled (512, 512, 246) -> (512, 512, 305))
+   dice vs label case_009.nii.gz: 0.027701
+   resampled dice vs label case_010.nii.gz: 0.158022 (resampled (512, 512, 246) -> (512, 512, 257))
+   resampled dice vs label case_011.nii.gz: 0.048867 (resampled (512, 512, 246) -> (512, 512, 333))
+   resampled dice vs label case_012.nii.gz: 0.015336 (resampled (512, 512, 246) -> (512, 512, 337))
+   resampled dice vs label case_013.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 245))
+   resampled dice vs label case_014.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 539))
+   resampled dice vs label case_015.nii.gz: 0.218800 (resampled (512, 512, 246) -> (512, 512, 297))
+   resampled dice vs label case_016.nii.gz: 0.088261 (resampled (512, 512, 246) -> (512, 512, 128))
+   resampled dice vs label case_017.nii.gz: 0.431279 (resampled (512, 512, 246) -> (512, 512, 257))
+   resampled dice vs label case_019.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 513))
+   resampled dice vs label case_020.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 509))
+   resampled dice vs label case_021.nii.gz: 0.043427 (resampled (512, 512, 246) -> (512, 512, 541))
+   resampled dice vs label case_022.nii.gz: 0.017121 (resampled (512, 512, 246) -> (512, 512, 633))
+   resampled dice vs label case_023.nii.gz: 0.080215 (resampled (512, 512, 246) -> (512, 512, 649))
+   resampled dice vs label case_024.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 373))
+   resampled dice vs label case_025.nii.gz: 0.033882 (resampled (512, 512, 246) -> (512, 512, 537))
+   resampled dice vs label case_026.nii.gz: 0.073199 (resampled (512, 512, 246) -> (512, 512, 481))
+   resampled dice vs label case_027.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 513))
+   resampled dice vs label case_028.nii.gz: 0.226219 (resampled (512, 512, 246) -> (512, 512, 577))
+   resampled dice vs label case_029.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 413))
+   resampled dice vs label case_032.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 505))
+   resampled dice vs label case_033.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 755))
+   resampled dice vs label case_035.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 329))
+   resampled dice vs label case_036.nii.gz: 0.015697 (resampled (512, 512, 246) -> (512, 512, 281))
+[ACCEPT] Segmentation case 59 2; abdomen pelvis version 2.nii: segmented_slices=49 -> ADDED to total.
+
+[PROCESS] File: Segmentation case 59 2; abdomen pelvis.nii
+ - mask shape: (512, 512, 246); nonzero_voxels: 277418; chosen slice axis: 2
+   resampled dice vs label case_001.nii.gz: 0.219199 (resampled (512, 512, 246) -> (512, 512, 281))
+   resampled dice vs label case_002.nii.gz: 0.067536 (resampled (512, 512, 246) -> (512, 512, 305))
+   resampled dice vs label case_003.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 625))
+   resampled dice vs label case_004.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 651))
+   resampled dice vs label case_005.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 461))
+   resampled dice vs label case_006.nii.gz: 0.004905 (resampled (512, 512, 246) -> (512, 512, 269))
+   resampled dice vs label case_007.nii.gz: 0.000516 (resampled (512, 512, 246) -> (512, 512, 66))
+   resampled dice vs label case_008.nii.gz: 0.021480 (resampled (512, 512, 246) -> (512, 512, 305))
+   dice vs label case_009.nii.gz: 0.028722
+   resampled dice vs label case_010.nii.gz: 0.162312 (resampled (512, 512, 246) -> (512, 512, 257))
+   resampled dice vs label case_011.nii.gz: 0.012209 (resampled (512, 512, 246) -> (512, 512, 333))
+   resampled dice vs label case_012.nii.gz: 0.013956 (resampled (512, 512, 246) -> (512, 512, 337))
+   resampled dice vs label case_013.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 245))
+   resampled dice vs label case_014.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 539))
+   resampled dice vs label case_015.nii.gz: 0.191279 (resampled (512, 512, 246) -> (512, 512, 297))
+   resampled dice vs label case_016.nii.gz: 0.091560 (resampled (512, 512, 246) -> (512, 512, 128))
+   resampled dice vs label case_017.nii.gz: 0.387039 (resampled (512, 512, 246) -> (512, 512, 257))
+   resampled dice vs label case_019.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 513))
+   resampled dice vs label case_020.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 509))
+   resampled dice vs label case_021.nii.gz: 0.029791 (resampled (512, 512, 246) -> (512, 512, 541))
+   resampled dice vs label case_022.nii.gz: 0.010903 (resampled (512, 512, 246) -> (512, 512, 633))
+   resampled dice vs label case_023.nii.gz: 0.069478 (resampled (512, 512, 246) -> (512, 512, 649))
+   resampled dice vs label case_024.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 373))
+   resampled dice vs label case_025.nii.gz: 0.004212 (resampled (512, 512, 246) -> (512, 512, 537))
+   resampled dice vs label case_026.nii.gz: 0.063310 (resampled (512, 512, 246) -> (512, 512, 481))
+   resampled dice vs label case_027.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 513))
+   resampled dice vs label case_028.nii.gz: 0.225096 (resampled (512, 512, 246) -> (512, 512, 577))
+   resampled dice vs label case_029.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 413))
+   resampled dice vs label case_032.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 505))
+   resampled dice vs label case_033.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 755))
+   resampled dice vs label case_035.nii.gz: 0.000000 (resampled (512, 512, 246) -> (512, 512, 329))
+   resampled dice vs label case_036.nii.gz: 0.016031 (resampled (512, 512, 246) -> (512, 512, 281))
+   dice vs other Segmentation case 59 2; abdomen pelvis version 2.nii: 0.977147
+ - DUPLICATE (dice 0.977147 >= 0.9) with other: Segmentation case 59 2; abdomen pelvis version 2.nii
+
+[PROCESS] File: Segmentation.nii
+ - mask shape: (512, 512, 509); nonzero_voxels: 3780645; chosen slice axis: 2
+   resampled dice vs label case_001.nii.gz: 0.006735 (resampled (512, 512, 509) -> (512, 512, 281))
+   resampled dice vs label case_002.nii.gz: 0.000000 (resampled (512, 512, 509) -> (512, 512, 305))
+   resampled dice vs label case_003.nii.gz: 0.441671 (resampled (512, 512, 509) -> (512, 512, 625))
+   resampled dice vs label case_004.nii.gz: 0.078226 (resampled (512, 512, 509) -> (512, 512, 651))
+   resampled dice vs label case_005.nii.gz: 0.047735 (resampled (512, 512, 509) -> (512, 512, 461))
+   resampled dice vs label case_006.nii.gz: 0.038496 (resampled (512, 512, 509) -> (512, 512, 269))
+   resampled dice vs label case_007.nii.gz: 0.121961 (resampled (512, 512, 509) -> (512, 512, 66))
+   resampled dice vs label case_008.nii.gz: 0.001039 (resampled (512, 512, 509) -> (512, 512, 305))
+   resampled dice vs label case_009.nii.gz: 0.000000 (resampled (512, 512, 509) -> (512, 512, 246))
+   resampled dice vs label case_010.nii.gz: 0.000000 (resampled (512, 512, 509) -> (512, 512, 257))
+   resampled dice vs label case_011.nii.gz: 0.002005 (resampled (512, 512, 509) -> (512, 512, 333))
+   resampled dice vs label case_012.nii.gz: 0.021261 (resampled (512, 512, 509) -> (512, 512, 337))
+   resampled dice vs label case_013.nii.gz: 0.000000 (resampled (512, 512, 509) -> (512, 512, 245))
+   resampled dice vs label case_014.nii.gz: 0.000000 (resampled (512, 512, 509) -> (512, 512, 539))
+   resampled dice vs label case_015.nii.gz: 0.003641 (resampled (512, 512, 509) -> (512, 512, 297))
+   resampled dice vs label case_016.nii.gz: 0.000000 (resampled (512, 512, 509) -> (512, 512, 128))
+   resampled dice vs label case_017.nii.gz: 0.000000 (resampled (512, 512, 509) -> (512, 512, 257))
+   resampled dice vs label case_019.nii.gz: 0.071687 (resampled (512, 512, 509) -> (512, 512, 513))
+ - DUPLICATE (exact) with label: case_020.nii.gz
+
+[PROCESS] File: Segmentation_1 case unkown 1 52.nii
+ - mask shape: (512, 512, 305); nonzero_voxels: 150571; chosen slice axis: 2
+   resampled dice vs label case_001.nii.gz: 0.331802 (resampled (512, 512, 305) -> (512, 512, 281))
+ - DUPLICATE (exact) with label: case_002.nii.gz
+
+[PROCESS] File: Segmentation_2.nii
+ - mask shape: (512, 512, 281); nonzero_voxels: 126119; chosen slice axis: 2
+   dice vs label case_001.nii.gz: 0.000334
+   resampled dice vs label case_002.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 305))
+   resampled dice vs label case_003.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 625))
+   resampled dice vs label case_004.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 651))
+   resampled dice vs label case_005.nii.gz: 0.003010 (resampled (512, 512, 281) -> (512, 512, 461))
+   resampled dice vs label case_006.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 269))
+   resampled dice vs label case_007.nii.gz: 0.001337 (resampled (512, 512, 281) -> (512, 512, 66))
+   resampled dice vs label case_008.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 305))
+   resampled dice vs label case_009.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 246))
+   resampled dice vs label case_010.nii.gz: 0.041434 (resampled (512, 512, 281) -> (512, 512, 257))
+   resampled dice vs label case_011.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 333))
+   resampled dice vs label case_012.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 337))
+   resampled dice vs label case_013.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 245))
+   resampled dice vs label case_014.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 539))
+   resampled dice vs label case_015.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 297))
+   resampled dice vs label case_016.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 128))
+   resampled dice vs label case_017.nii.gz: 0.034340 (resampled (512, 512, 281) -> (512, 512, 257))
+   resampled dice vs label case_019.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 513))
+   resampled dice vs label case_020.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 509))
+   resampled dice vs label case_021.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 541))
+   resampled dice vs label case_022.nii.gz: 0.009655 (resampled (512, 512, 281) -> (512, 512, 633))
+   resampled dice vs label case_023.nii.gz: 0.051940 (resampled (512, 512, 281) -> (512, 512, 649))
+   resampled dice vs label case_024.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 373))
+   resampled dice vs label case_025.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 537))
+   resampled dice vs label case_026.nii.gz: 0.031632 (resampled (512, 512, 281) -> (512, 512, 481))
+   resampled dice vs label case_027.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 513))
+   resampled dice vs label case_028.nii.gz: 0.101430 (resampled (512, 512, 281) -> (512, 512, 577))
+   resampled dice vs label case_029.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 413))
+   resampled dice vs label case_032.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 505))
+   resampled dice vs label case_033.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 755))
+   resampled dice vs label case_035.nii.gz: 0.000000 (resampled (512, 512, 281) -> (512, 512, 329))
+ - DUPLICATE (exact) with label: case_036.nii.gz
+
+[PROCESS] File: Segmentation_3.nii
+ - mask shape: (512, 512, 521); nonzero_voxels: 253729; chosen slice axis: 0
+   resampled dice vs label case_001.nii.gz: 0.178831 (resampled (512, 512, 521) -> (512, 512, 281))
+   resampled dice vs label case_002.nii.gz: 0.033627 (resampled (512, 512, 521) -> (512, 512, 305))
+   resampled dice vs label case_003.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 625))
+   resampled dice vs label case_004.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 651))
+   resampled dice vs label case_005.nii.gz: 0.133088 (resampled (512, 512, 521) -> (512, 512, 461))
+   resampled dice vs label case_006.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 269))
+   resampled dice vs label case_007.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 66))
+   resampled dice vs label case_008.nii.gz: 0.047675 (resampled (512, 512, 521) -> (512, 512, 305))
+   resampled dice vs label case_009.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 246))
+   resampled dice vs label case_010.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 257))
+   resampled dice vs label case_011.nii.gz: 0.090402 (resampled (512, 512, 521) -> (512, 512, 333))
+   resampled dice vs label case_012.nii.gz: 0.057247 (resampled (512, 512, 521) -> (512, 512, 337))
+   resampled dice vs label case_013.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 245))
+   resampled dice vs label case_014.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 539))
+   resampled dice vs label case_015.nii.gz: 0.090329 (resampled (512, 512, 521) -> (512, 512, 297))
+   resampled dice vs label case_016.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 128))
+   resampled dice vs label case_017.nii.gz: 0.213722 (resampled (512, 512, 521) -> (512, 512, 257))
+   resampled dice vs label case_019.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 513))
+   resampled dice vs label case_020.nii.gz: 0.000054 (resampled (512, 512, 521) -> (512, 512, 509))
+   resampled dice vs label case_021.nii.gz: 0.320753 (resampled (512, 512, 521) -> (512, 512, 541))
+   resampled dice vs label case_022.nii.gz: 0.216616 (resampled (512, 512, 521) -> (512, 512, 633))
+   resampled dice vs label case_023.nii.gz: 0.280255 (resampled (512, 512, 521) -> (512, 512, 649))
+   resampled dice vs label case_024.nii.gz: 0.000519 (resampled (512, 512, 521) -> (512, 512, 373))
+   resampled dice vs label case_025.nii.gz: 0.098615 (resampled (512, 512, 521) -> (512, 512, 537))
+   resampled dice vs label case_026.nii.gz: 0.104668 (resampled (512, 512, 521) -> (512, 512, 481))
+   resampled dice vs label case_027.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 513))
+   resampled dice vs label case_028.nii.gz: 0.142072 (resampled (512, 512, 521) -> (512, 512, 577))
+   resampled dice vs label case_029.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 413))
+   resampled dice vs label case_032.nii.gz: 0.001907 (resampled (512, 512, 521) -> (512, 512, 505))
+   resampled dice vs label case_033.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 755))
+   resampled dice vs label case_035.nii.gz: 0.000000 (resampled (512, 512, 521) -> (512, 512, 329))
+   resampled dice vs label case_036.nii.gz: 0.051939 (resampled (512, 512, 521) -> (512, 512, 281))
+   resampled dice vs other Segmentation case 59 2; abdomen pelvis version 2.nii: 0.083996
+[ACCEPT] Segmentation_3.nii: segmented_slices=111 -> ADDED to total.
+
+[PROCESS] File: Segmentation_case 50 chest+abd+c.nii
+ - mask shape: (512, 512, 755); nonzero_voxels: 68791; chosen slice axis: 0
+   resampled dice vs label case_001.nii.gz: 0.000233 (resampled (512, 512, 755) -> (512, 512, 281))
+   resampled dice vs label case_002.nii.gz: 0.083406 (resampled (512, 512, 755) -> (512, 512, 305))
+   resampled dice vs label case_003.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 625))
+   resampled dice vs label case_004.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 651))
+   resampled dice vs label case_005.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 461))
+   resampled dice vs label case_006.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 269))
+   resampled dice vs label case_007.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 66))
+   resampled dice vs label case_008.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 305))
+   resampled dice vs label case_009.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 246))
+   resampled dice vs label case_010.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 257))
+   resampled dice vs label case_011.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 333))
+   resampled dice vs label case_012.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 337))
+   resampled dice vs label case_013.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 245))
+   resampled dice vs label case_014.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 539))
+   resampled dice vs label case_015.nii.gz: 0.000657 (resampled (512, 512, 755) -> (512, 512, 297))
+   resampled dice vs label case_016.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 128))
+   resampled dice vs label case_017.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 257))
+   resampled dice vs label case_019.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 513))
+   resampled dice vs label case_020.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 509))
+   resampled dice vs label case_021.nii.gz: 0.013397 (resampled (512, 512, 755) -> (512, 512, 541))
+   resampled dice vs label case_022.nii.gz: 0.000615 (resampled (512, 512, 755) -> (512, 512, 633))
+   resampled dice vs label case_023.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 649))
+   resampled dice vs label case_024.nii.gz: 0.003399 (resampled (512, 512, 755) -> (512, 512, 373))
+   resampled dice vs label case_025.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 537))
+   resampled dice vs label case_026.nii.gz: 0.018543 (resampled (512, 512, 755) -> (512, 512, 481))
+   resampled dice vs label case_027.nii.gz: 0.158415 (resampled (512, 512, 755) -> (512, 512, 513))
+   resampled dice vs label case_028.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 577))
+   resampled dice vs label case_029.nii.gz: 0.000000 (resampled (512, 512, 755) -> (512, 512, 413))
+   resampled dice vs label case_032.nii.gz: 0.031179 (resampled (512, 512, 755) -> (512, 512, 505))
+ - DUPLICATE (exact) with label: case_033.nii.gz
+
+[PROCESS] File: Segmentation_malak mohamed.nii
+ - mask shape: (512, 512, 329); nonzero_voxels: 1091640; chosen slice axis: 2
+   resampled dice vs label case_001.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 281))
+   resampled dice vs label case_002.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 305))
+   resampled dice vs label case_003.nii.gz: 0.133208 (resampled (512, 512, 329) -> (512, 512, 625))
+   resampled dice vs label case_004.nii.gz: 0.098068 (resampled (512, 512, 329) -> (512, 512, 651))
+   resampled dice vs label case_005.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 461))
+   resampled dice vs label case_006.nii.gz: 0.073273 (resampled (512, 512, 329) -> (512, 512, 269))
+   resampled dice vs label case_007.nii.gz: 0.233906 (resampled (512, 512, 329) -> (512, 512, 66))
+   resampled dice vs label case_008.nii.gz: 0.001909 (resampled (512, 512, 329) -> (512, 512, 305))
+   resampled dice vs label case_009.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 246))
+   resampled dice vs label case_010.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 257))
+   resampled dice vs label case_011.nii.gz: 0.000845 (resampled (512, 512, 329) -> (512, 512, 333))
+   resampled dice vs label case_012.nii.gz: 0.046748 (resampled (512, 512, 329) -> (512, 512, 337))
+   resampled dice vs label case_013.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 245))
+   resampled dice vs label case_014.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 539))
+   resampled dice vs label case_015.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 297))
+   resampled dice vs label case_016.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 128))
+   resampled dice vs label case_017.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 257))
+   resampled dice vs label case_019.nii.gz: 0.194779 (resampled (512, 512, 329) -> (512, 512, 513))
+   resampled dice vs label case_020.nii.gz: 0.361811 (resampled (512, 512, 329) -> (512, 512, 509))
+   resampled dice vs label case_021.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 541))
+   resampled dice vs label case_022.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 633))
+   resampled dice vs label case_024.nii.gz: 0.013841 (resampled (512, 512, 329) -> (512, 512, 373))
+   resampled dice vs label case_025.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 537))
+   resampled dice vs label case_026.nii.gz: 0.001101 (resampled (512, 512, 329) -> (512, 512, 481))
+   resampled dice vs label case_027.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 513))
+   resampled dice vs label case_029.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 413))
+   resampled dice vs label case_032.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 505))
+   resampled dice vs label case_033.nii.gz: 0.000000 (resampled (512, 512, 329) -> (512, 512, 755))
+ - DUPLICATE (exact) with label: case_035.nii.gz
+
+=== SUMMARY ===
+Labels files processed : 32
+Other files processed  : 8
+Other duplicates skipped: 6
+Slices added from others: 160
+TOTAL segmented slices (labels + unique others): 3184

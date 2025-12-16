@@ -1,9 +1,12 @@
 import os
 import SimpleITK as sitk
-import shutil
+from dotenv import load_dotenv
 
-# ==== Set base dataset path ====
-base_path = r"C:\Neuroblastoma\Neuroblastoma\neuroblastoma_segmentation\data\nnUNet_raw\Dataset001_Neuroblastoma"
+# Load environment variables
+load_dotenv()
+
+# ==== Set your base directory here ====
+base_path = os.getenv("DATA_DIR")  # Make sure DATA_DIR is set in your .env
 images_dir = os.path.join(base_path, "imagesTr")
 labels_dir = os.path.join(base_path, "labelsTr")
 labels_old_dir = os.path.join(base_path, "labelsTr_old")

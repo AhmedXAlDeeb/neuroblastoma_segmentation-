@@ -1,364 +1,223 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+"""
+STL -> NIfTI converter (robust rasterization & alignment)
+
+Approach:
+1. Load mesh with trimesh
+2. Try simple repairs if mesh is not watertight
+3. Load reference NIfTI and compute world coordinates of voxel centers using affine
+4. Test voxel centers for inclusion inside mesh (mesh.contains), in chunks
+5. Build binary mask and save as NIfTI with the same affine as reference
+
+This produces a filled mask aligned to the reference image.
+"""
 
 import os
-import vtk
-import logging
-import argparse
-import functools
+import sys
+import traceback
+import math
+from pathlib import Path
+from typing import Tuple
+
 import numpy as np
+import nibabel as nib
+import trimesh
 
-'''
-This simple python script converts a STL mesh surface to Nifti image. The Output Volume Space
-will match the one of reference nifti image that must be provided.
-The conversion procedure use the vtk library.
-'''
-
-__author__ = ['Riccardo Biondi']
-__email__ = ['riccardo.biondi7@unibo.it']
+import vtk
 
 
-#
-# Definition of loggin levels
-#
-
-log_levels = {
-    0: logging.ERROR,
-    1: logging.WARN,
-    2: logging.INFO,
-    3: logging.DEBUG,
-}
+def log(msg: str):
+    print(msg)
+    sys.stdout.flush()
 
 
-#
-# Simple CLI definition using argparse
-#
+def try_repair_mesh(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
+    """Attempt light-weight repairs to increase chance of contains() working."""
+    try:
+        # Ensure correct winding / normals
+        if not mesh.is_watertight:
+            log("  ⚠ mesh not watertight: attempting repairs (fill_holes/fix_normals)...")
+            try:
+                trimesh.repair.fill_holes(mesh)
+            except Exception as e:
+                log(f"    fill_holes failed: {e}")
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    _ = parser.add_argument('-in',
-                            '--input',
-                            dest='input',
-                            action='store',
-                            type=str,
-                            required=True,
-                            help='Path to the input STL model. Must be .stl')
-    _ = parser.add_argument('-ref',
-                            '--reference',
-                            dest='reference',
-                            action='store',
-                            type=str,
-                            required=True,
-                            help='Path to the reference Nifti image. Must be .nii or .nii.gz')
-    _ = parser.add_argument('-out',
-                            '--output',
-                            dest='output',
-                            action='store',
-                            type=str,
-                            required=True,
-                            help='Output filename. Must be .nii or .nii.gz')
-    #
-    # Options for the verbosity level
-    #
-    # The code for the selection of the logging level was taken from:
-    # https://gist.github.com/willprice/352bb7cd40de33e73b84b93b9ab3d240
-    #
+            try:
+                trimesh.repair.fix_normals(mesh)
+            except Exception as e:
+                log(f"    fix_normals failed: {e}")
 
-    parser.add_argument("-v",
-                        "--verbose",
-                        dest="verbosity",
-                        action="count",
-                        required=False,
-                        default=0,
-                        help="Verbosity (between 1-4 occurrences with more leading to more "
-                         "verbose logging). ERROR=0, WARN=2, INFO=3, "
-                         "DEBUG=4")
+            # Merge duplicate vertices / remove degenerate faces
+            try:
+                mesh.remove_unreferenced_vertices()
+                mesh.remove_degenerate_faces()
+            except Exception:
+                pass
 
-    args = parser.parse_args()
-    return args
-
-#
-# Now define a decorator to use for upadate the various vtk objects
-#
-def update(func):
-    '''
-    This decorator allows ot update your vtk pipeline
-    '''
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        vtk_filter = func(*args, **kwargs)
-        _ = vtk_filter.Update()
-
-        return vtk_filter
-    return wrapper
+        return mesh
+    except Exception as e:
+        log(f"  ⚠ Mesh repair threw: {e}")
+        return mesh
 
 
-#
-# Define Basic Reading and Writing functions
-#
-
-
-@update
-def read_stl(filename):
-    """STL reader
+def voxel_centers_world(shape: Tuple[int, int, int], affine: np.ndarray, chunk: slice = None):
     """
-    logging.debug('Reading stl file from: {}'.format(filename))
+    Generator that yields (indices_slice, centers_world) where centers_world is (N,3)
+    for the requested sub-block of voxels.
+    - shape: (nx,ny,nz)
+    - affine: 4x4 affine mapping voxel indices to world (voxel i-> world: affine @ [i+0.5,...,1])
+    - chunk: slice object for flatten index range (optional)
+    """
+    nx, ny, nz = shape
+    # flatten count
+    total = nx * ny * nz
+
+    if chunk is None:
+        start = 0
+        stop = total
+    else:
+        start = int(chunk.start)
+        stop = int(chunk.stop)
+
+    # We'll compute indices for the given flattened range
+    # convert flattened k in [start, stop) to i,j,k using division
+    count = stop - start
+    if count <= 0:
+        return
+
+    # generate linear indices in blocks to avoid giant arrays
+    # produce grid of linear indices
+    idx = np.arange(start, stop, dtype=np.int64)
+    i = idx // (ny * nz)
+    rem = idx % (ny * nz)
+    j = rem // nz
+    k = rem % nz
+
+    # convert to world coords of voxel centers (i+0.5, j+0.5, k+0.5)
+    ijk = np.vstack((i + 0.5, j + 0.5, k + 0.5, np.ones_like(i, dtype=float)))
+    # world = affine @ ijk
+    world = affine @ ijk
+    world3 = world[:3, :].T  # (N,3)
+    return (start, stop), world3, (i, j, k)
+
+
+def mesh_contains_mask(mesh: trimesh.Trimesh, ref_shape: Tuple[int, int, int], ref_affine: np.ndarray, chunk_size: int = 2_000_000):
+    """
+    Create boolean mask where True = inside mesh.
+    We test voxel centers in chunks of chunk_size (flattened voxels).
+    """
+    nx, ny, nz = ref_shape
+    total = nx * ny * nz
+    mask = np.zeros(total, dtype=np.uint8)
+
+    # loop chunks
+    for start in range(0, total, chunk_size):
+        stop = min(total, start + chunk_size)
+        (s, e), world3, (ii, jj, kk) = voxel_centers_world(ref_shape, ref_affine, chunk=slice(start, stop))
+        # trimesh.contains expects (N,3)
+        try:
+            inside = mesh.contains(world3)
+        except Exception as ex:
+            # If contains fails (e.g. mesh non-watertight), try repairing and retry once
+            log(f"  ⚠ mesh.contains error: {ex} — attempting repair + retry")
+            mesh = try_repair_mesh(mesh)
+            inside = mesh.contains(world3)
+
+        # inside is boolean array
+        mask[s:e] = inside.astype(np.uint8)
+
+        log(f"    processed voxels {s}..{e} -> inside count: {inside.sum()}")
+
+    mask3 = mask.reshape((nx, ny, nz))
+    return mask3
+
+
+def mesh_to_nifti_fill(stl_path: str, output_dir: str, reference_nifti_path: str):
+    """
+    Robust STL → NIfTI converter using VTK stencil rasterization.
+    No raycasting; handles large meshes efficiently.
+    """
+    print(f"\n🧱 Converting {stl_path}")
+    
+    # --- Load reference NIfTI ---
+    ref_img = nib.load(reference_nifti_path)
+    affine = ref_img.affine
+    spacing = np.abs(np.diag(affine)[:3])
+    shape = ref_img.shape[:3]
+    origin = affine[:3, 3]
+    
+    # --- Load STL ---
     reader = vtk.vtkSTLReader()
-    reader.SetFileName(filename)
-
-    return reader
-
-
-@update
-def read_nifti(filename):
-    """Nifti Reader
-    """
-    logging.debug('Reading Nifti Image from: {}'.format(filename))
-    reader = vtk.vtkNIFTIImageReader()
-    _ = reader.SetFileName(filename)
-
-    return reader
-
-
-@update
-def write_nifti(filename, image, qform_matrix, qfac):
-    '''Nifti Writer
-    '''
-
-    logging.debug('Writing the image to: {}'.format(filename))
-
-    writer = vtk.vtkNIFTIImageWriter()
-    _ = writer.SetFileName(filename)
-    _ = writer.SetInputData(image)
-    _ = writer.SetQFormMatrix(qform_matrix)
-    _ = writer.SetQFac(qfac)
-
-    return writer
-
-
-
-#
-# Function Useful to Init the Required Spatial Information from the reference image
-#
-
-def get_surface_origin(bounds, spacing):
-
-    logging.debug('Computing the Physical Origin og the Image Corrseponding to \
-                  the mesh surface, using bounds: {} and \
-                  spacing: {}'.format(bounds, spacing))
-
-    origin = [bounds[2*i] + (s / 2) for i,s in enumerate(spacing)]
-
-    logging.debug('Computed Origin is: {}'.format(origin))
-
-    return tuple(origin)
-
-
-
-def get_surface_dimensions(bounds, spacing):
-
-    logging.debug('Getting the Surface Dimensions using bounds: {} and Spacing:\
-                  {}'.format(bounds, spacing))
-
-    dimensions = [(bounds[2*i+1] - bounds[2*i]) // spacing[i] for i in range(len(spacing))]
-    dimensions = tuple(map(lambda x : int(x), dimensions))
-
-    logging.debug('Estimated Dimensions: {}'.format(dimensions))
-
-    return dimensions
-
-
-def get_origin_from_qform_matrix(QFormMatrix):
-    '''
-    Get the physical origin
-    '''
-
-    logging.debug("Estimating Reference Image Origin From QFormMatrix")
-
-    offset = [QFormMatrix.GetElement(i, 3) for i in range(3)]
-    sign = [QFormMatrix.GetElement(i, i) for i in range(3)]
-    origin = tuple([s * o for s, o in zip(sign, offset)])
-
-    logging.debug("Estimated Origin: {}".format(origin))
-
-    return origin
-
-
-def get_reference_information_from_image(reader, surface_bounds):
-    ''' Get the Configuration Dictionary using the reference image
-    '''
-
-    logging.debug('Parsing the image get the required information')
-
-    surface_dimensions = get_surface_dimensions(surface_bounds, reader.GetOutput().GetSpacing())
-    surface_origin = get_surface_origin(surface_bounds, reader.GetOutput().GetSpacing())
-    referece_origin = get_origin_from_qform_matrix(reader.GetQFormMatrix())
-
-    config = {'Reference Dimensions' : reader.GetOutput().GetDimensions(),
-              'Surface Dimensions' : surface_dimensions,
-              'Spacing' : reader.GetOutput().GetSpacing(),
-              'Reference Origin' : referece_origin,
-              'Surface Origin' : surface_origin,
-              'Direction' : reader.GetOutput().GetDirectionMatrix(),
-              'QFormMatrix' : reader.GetQFormMatrix(),
-              'QFac' : reader.GetQFac()}
-
-    return config
-
-
-#
-# Function to convert the input mesh surface to the binary image volume
-#
-
-def init_vtk_image(spacing, dimensions, origin, direction, constant_value=1):
-    '''
-    Create a vtk image acording to the specified spacing, dimensions, origin and
-    costant_value.
-    '''
-    logging.debug('Creating A VTK imaeg with Dimension: {}, Spacing: {}, \
-                  Origin: {}, Direction: {}, GL: {}'.format(dimensions, spacing, origin, direction, constant_value))
-
-    vtkImage = vtk.vtkImageData()
-    _ = vtkImage.SetSpacing(spacing)
-    _ = vtkImage.SetDimensions(dimensions)
-    _ = vtkImage.SetDirectionMatrix(direction)
-    _ = vtkImage.SetOrigin(origin)
-    _ = vtkImage.AllocateScalars(7, 1) # 7 implise the usage of unsigned int type
-
-    number_of_points = vtkImage.GetNumberOfPoints()
-
-    for i in range(number_of_points):
-        vtkImage.GetPointData().GetScalars().SetTuple1(i, 1)
-
-    return vtkImage
-
-
-@update
-def vtk_polydata2imagestencil(polydata, origin, spacing, extent):
-    '''
-    Intialize vtkPolyDataToImageStencil.
-    '''
-
-    poly2stenc = vtk.vtkPolyDataToImageStencil()
-    _ = poly2stenc.SetInputData(polydata)
-    _ = poly2stenc.SetOutputOrigin(origin)
-    _ = poly2stenc.SetOutputSpacing(spacing)
-    _ = poly2stenc.SetOutputWholeExtent(extent)
-
-    return poly2stenc
-
-
-@update
-def get_image_stencil(vtk_image, poly2stencil=None, bkg=0):
-    '''
-    '''
-    image_stencil = vtk.vtkImageStencil()
-    _ = image_stencil.SetInputData(vtk_image)
-
-    if poly2stencil is not None:
-        _ = image_stencil.SetStencilConnection(poly2stencil.GetOutputPort())
-    _ = image_stencil.ReverseStencilOff()
-    _ = image_stencil.SetBackgroundValue(bkg)
-
-    return image_stencil
-
-
-@update
-def translate_image(image, offset=[0., 0., 0.], bkg_level=0):
-    '''Translate the image to the reference origin
-    '''
-
-    logging.debug('Transalete the imgage of: {}'.format(offset))
-    transform = vtk.vtkTransform()
-    _ = transform.Translate(*offset)
-
-    reslice = vtk.vtkImageReslice()
-    _ = reslice.SetResliceTransform(transform)
-    _ = reslice.SetInterpolationModeToNearestNeighbor()
-    _ = reslice.SetInputData(image)
-    _ = reslice.SetOutputSpacing(image.GetSpacing())
-    _ = reslice.SetOutputOrigin(image.GetOrigin())
-    _ = reslice.SetOutputExtent(image.GetExtent())
-    _ = reslice.SetBackgroundLevel(bkg_level)
-
-    return reslice
-
-@update
-def vtk_change_image_information(image, origin):
-    '''
-    '''
-
-    changer = vtk.vtkImageChangeInformation()
-    _ = changer.SetInputData(image)
-    #_ = changer.SetInformationInputData(reference)
-    _ = changer.SetOutputOrigin(origin)
-    return changer
-
-
-#
-# Main Function Containing the Whole Pipeline
-#
-
-def main():
-
-    args = parse_args()
-
-    # set the logging level
-    logging.basicConfig(level=log_levels[min(args.verbosity, max(log_levels.keys()))],
-                        format='%(asctime)s - %(name)s -  %(levelname)s - %(message)s')
-
-    logging.info('Reading input and reference image')
-
-    surface = read_stl(args.input)
-    reference = read_nifti(args.reference)
-
-    logging.info('Converting Mesh to Binary Image')
-
-    surface_bounds = surface.GetOutput().GetBounds()
-    logging.debug('Extracted Surface Bounds: {}'.format(surface_bounds))
-
-    config = get_reference_information_from_image(reference, surface_bounds)
-
-    logging.debug('Extracted Reference Informations: {}'.format(config))
-
-    logging.info("Starting the Creation of the Base Image")
-
-    vtk_image = init_vtk_image(spacing=config['Spacing'],
-                               dimensions=config['Reference Dimensions'],
-                               origin=config['Reference Origin'],
-                               direction=config['Direction'],
-                               constant_value=1)
-
-
-    logging.info('Converting PolyData to Image Stencil')
-    poly2stencil = vtk_polydata2imagestencil(polydata=surface.GetOutput(),
-                                            origin=config['Surface Origin'],
-                                            spacing=config['Spacing'],
-                                            extent=vtk_image.GetExtent())
-    logging.info('Get Image Stencil')
-    image_stencil = get_image_stencil(vtk_image=vtk_image,
-                                      poly2stencil=poly2stencil,
-                                      bkg=0)
-
-    logging.info('Positiong the volume in the space')
-
-    offset = np.asarray(config['Reference Origin']) - np.asarray(config['Surface Origin'])
-
-    logging.debug('The computed offset is: {}'.format(offset))
-
-    translated = translate_image(image_stencil.GetOutput(), offset)
-    translated = vtk_change_image_information(translated.GetOutput(), (0., 0., 0.))
-
-    logging.info('Writing the results')
-
-    _ = write_nifti(filename=args.output,
-                    image=translated.GetOutput(),
-                    qform_matrix=config['QFormMatrix'],
-                    qfac=config['QFac'])
-
-    logging.info('DONE')
-
-
-
-if __name__ == '__main__':
-    main()
+    reader.SetFileName(stl_path)
+    reader.Update()
+    poly = reader.GetOutput()
+    
+    # --- Create blank image matching reference ---
+    image = vtk.vtkImageData()
+    image.SetSpacing(spacing)
+    image.SetDimensions(shape)
+    image.SetOrigin(origin)
+    image.AllocateScalars(vtk.VTK_UNSIGNED_CHAR, 1)
+    image.GetPointData().GetScalars().Fill(1)
+    
+    # --- Rasterize STL into binary stencil ---
+    poly2stencil = vtk.vtkPolyDataToImageStencil()
+    poly2stencil.SetInputData(poly)
+    poly2stencil.SetOutputSpacing(spacing)
+    poly2stencil.SetOutputOrigin(origin)
+    poly2stencil.SetOutputWholeExtent(image.GetExtent())
+    poly2stencil.Update()
+    
+    stencil = vtk.vtkImageStencil()
+    stencil.SetInputData(image)
+    stencil.SetStencilConnection(poly2stencil.GetOutputPort())
+    stencil.ReverseStencilOff()
+    stencil.SetBackgroundValue(0)
+    stencil.Update()
+    
+    # --- Convert to NumPy array ---
+    vtk_array = stencil.GetOutput().GetPointData().GetScalars()
+    mask_np = np.flipud(np.transpose(np.reshape(
+        np.frombuffer(vtk_array, dtype=np.uint8),
+        shape[::-1]  # vtk stores in z,y,x order
+    )))
+    
+    # --- Save NIfTI ---
+    out_path = Path(output_dir) / (Path(stl_path).stem + ".nii.gz")
+    nib.save(nib.Nifti1Image(mask_np.astype(np.uint8), affine), str(out_path))
+    print(f"✅ Saved mask: {out_path}")
+    return str(out_path)
+def process_directory(root_dir: str, chunk_size: int = 2_000_000):
+    log(f"🚀 Starting batch STL → NIfTI in: {root_dir}")
+    total_success = 0
+    total_failed = 0
+    for case in sorted(os.listdir(root_dir)):
+        case_path = os.path.join(root_dir, case)
+        if not os.path.isdir(case_path):
+            continue
+        stl_files = [f for f in os.listdir(case_path) if f.lower().endswith(".stl")]
+        nii_files = [f for f in os.listdir(case_path) if f.lower().endswith((".nii", ".nii.gz"))]
+        if not stl_files or not nii_files:
+            log(f"⚠ Skipping {case} (missing STL or reference NIfTI)")
+            continue
+        ref_img = os.path.join(case_path, nii_files[0])
+        for stl_file in stl_files:
+            stl_path = os.path.join(case_path, stl_file)
+            try:
+                mesh_to_nifti_fill(stl_path, case_path, ref_img)
+                total_success += 1
+            except Exception as e:
+                log(f"  ❌ Error converting {stl_file}: {e}")
+                log(traceback.format_exc())
+                total_failed += 1
+    log("\nSummary:")
+    log(f"  Successful: {total_success}")
+    log(f"  Failed: {total_failed}")
+    log(f"  Total processed: {total_success + total_failed}")
+
+
+if __name__ == "__main__":
+    # Example usage: python stl_to_nifti.py /path/to/stl_root
+    
+    root = r"D:\SBME\GP\Neuroblastoma\neuroblastoma_segmentation\data\stl_data"
+    process_directory(root)
